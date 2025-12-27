@@ -1,285 +1,370 @@
-# Bello
+# 💬 Bello — Social Meetup & Real-time Chat System
 
-一個基於 Vue.js 和 Flask 開發的聚會管理系統，提供用戶認證、聚會創建與管理、即時聊天、個人資料管理以及管理員後台等功能。
+🌐 **Live Version:** [https://bello-tw.vercel.app/](https://bello-tw.vercel.app/)
 
-## 專案簡介
+Bello is a database-driven web-based social networking system that provides a relaxed and secure platform for users to create or participate in physical meetups such as lunch, coffee, language exchange, and more, with support for cross-language communication. The system is divided into two main roles: User and Admin. Users can freely register accounts, edit profiles, host and join meetups, and communicate with others through the built-in chat rooms, while administrators can manage meetup content and user behavior to maintain platform order.
 
-Bello 是一個全端 Web 應用程式，採用前後端分離架構。系統允許用戶創建和管理聚會活動，參與者可以透過即時聊天功能進行交流，管理員則可以透過後台管理系統監控和管理整個平台。
+## ✨ Features
 
-## 主要功能
+### 👤 User Features
+- **Multiple Login Methods**: Support for account/password login and Google OAuth login
+- **Profile Management**: Complete profile editing, including avatar upload and cropping functionality
+- **Meetup Management**: Create, join, and cancel meetups, supporting various meetup types (lunch, coffee, dinner, drinks, language exchange)
+- **Meetup Password Protection**: Set passwords for meetups; other users must enter the correct password to join
+- **Location Integration**: Support for Google Places autocomplete for location input and map viewing of meetup locations
+- **Real-time Messaging**:
+  - One-on-one private chat
+  - Meetup group chat rooms
+  - Online status display
+- **Friend System**:
+  - Search and add friends (supports account, name, nickname search)
+  - Friend request management (send, accept, reject)
+  - Friend list with online status (including avatar display)
+  - View other users' public profiles (complete basic and detailed information)
+  - Social media account display (shows all social accounts when willing to exchange)
+  - All user lists display avatars (private chat, friend list, search results)
 
-### 用戶功能
-- 🔐 用戶註冊與登入
-- 👤 個人資料管理與更新
-- 📅 創建聚會活動
-- 🔍 瀏覽與搜尋聚會列表
-- ✅ 加入/離開聚會
-- 💬 即時聊天功能（私聊與聚會群聊）
-- 📋 查看我的聚會列表
+### 🔐 Admin Features
+- **Meetup Management**: View all meetups, view meetup details, cancel meetups, end meetups
+- **User Management**: Browse all user lists, view user detailed information, delete users, support ID search
+- **Chat History Viewing**:
+  - View all private chat conversation lists (shows both users, message count, last message time)
+  - View all meetup chat lists (shows meetup information, message count, status)
+  - Click to view detailed chat history
+  - Support pagination browsing and ID search
 
-### 管理員功能
-- 👥 用戶管理（查看、移除用戶）
-- 📊 聚會管理（查看、取消、結束聚會）
-- 💬 聊天記錄查詢（私聊與聚會聊天記錄）
-- 🔍 用戶聊天對象查詢
+### 🎨 User Experience
+- Page loading state management (prevents data flickering)
+- Responsive design adapted to various screen sizes
+- Loading animations and operation feedback
+- User-friendly error messages
 
-## 技術棧
+### 🛡️ Security Features
+- JWT Token authentication mechanism
+- Route permission control (Navigation Guards)
+- API endpoint protection (`@require_auth`, `@require_admin` decorators)
+- Embedded browser detection and prompts (LINE, Facebook, etc.)
 
-### 前端
-- **框架**: Vue.js 3.5.13
-- **路由**: Vue Router 4.4.5
-- **狀態管理**: Pinia 2.2.6
-- **UI 框架**: Bootstrap 5.3.3, Bootstrap Vue Next 0.26.10
-- **HTTP 客戶端**: Axios 1.7.9
-- **建置工具**: Vite 6.0.1
+## 🛠️ Tech Stack
 
-### 後端
-- **框架**: Flask 3.1.0
-- **資料庫**: PostgreSQL 16.6
-- **資料庫驅動**: psycopg2-binary 2.9.10
+### Frontend
+- **Framework**: Vue.js 3.5.13
+- **Routing**: Vue Router 4.4.5
+- **UI Framework**: Bootstrap 5.3.3
+- **Build Tool**: Vite 6.0.1
+- **Image Processing**: Cropper.js 1.6.2 (avatar cropping)
+- **HTTP Client**: Axios 1.7.9
+
+### Backend
+- **Framework**: Flask 3.1.0
+- **Database**: PostgreSQL (Neon cloud database)
+- **Database Driver**: psycopg2-binary 2.9.9
+- **Authentication**: PyJWT 2.8.0
+- **Password Hashing**: bcrypt 4.1.2
+- **OAuth**: google-auth 2.25.2
 - **CORS**: Flask-CORS 5.0.0
-- **環境變數**: python-dotenv 1.0.1
 
-### 開發環境
-- **作業系統**: Windows 11
-- **Python**: 3.10.9
-- **Node.js**: 21.5.0
-- **PostgreSQL**: 16.6
+### Deployment
+- **Frontend Deployment**: Vercel
+- **Backend Deployment**: Vercel Serverless Functions
+- **Database**: Neon PostgreSQL
 
-## 專案結構
+## 📁 Project Structure
 
 ```
-資料庫管理期末專案/
-├── backend/                 # 後端 Flask 應用
-│   ├── actions/            # API 端點實現
-│   │   ├── auth/          # 認證相關（登入、註冊、登出）
-│   │   ├── meeting/       # 聚會管理
-│   │   ├── profile/       # 個人資料
-│   │   ├── admin/         # 管理員功能
-│   │   └── chat/          # 聊天功能
-│   ├── app.py             # Flask 應用主程式
-│   ├── main.py            # 應用入口
-│   ├── config.py          # 配置檔案
-│   ├── DB_utils.py        # 資料庫工具函數
-│   ├── init_bello_db.sql  # 資料庫初始化 SQL
-│   ├── requirements.txt   # Python 依賴
-│   └── env.example        # 環境變數範例
-│
-└── frontend/              # 前端 Vue.js 應用
-    ├── src/
-    │   ├── views/         # 頁面元件
-    │   ├── components/    # 可重用元件
-    │   ├── router/        # 路由配置
-    │   └── stores/        # Pinia 狀態管理
-    ├── package.json       # Node.js 依賴
-    └── vite.config.js     # Vite 配置
+Bello_system/
+├── frontend/                 # Frontend project
+│   ├── src/
+│   │   ├── components/      # Vue components
+│   │   ├── views/           # Page views
+│   │   ├── router/          # Route configuration
+│   │   ├── utils/           # Utility functions (API, authentication, etc.)
+│   │   └── config/          # Configuration files
+│   ├── public/              # Static resources
+│   └── package.json
+├── backend/                 # Backend project
+│   ├── actions/             # API endpoints
+│   │   ├── auth/            # Authentication related
+│   │   ├── meeting/         # Meetup management
+│   │   ├── profile/         # User profiles
+│   │   ├── chat/            # Chat functionality
+│   │   ├── friend/          # Friend system
+│   │   └── admin/           # Admin features
+│   ├── DB_utils.py          # Database utility class
+│   ├── jwt_utils.py         # JWT utility functions
+│   ├── app.py               # Flask application entry point
+│   ├── config.py            # Configuration file
+│   ├── init_bello_db.sql    # Database initialization script
+│   └── requirements.txt     # Python dependencies
+├── api/                     # Vercel Serverless Function
+│   ├── index.py             # Entry file
+│   └── requirements.txt
+├── vercel.json              # Vercel deployment configuration
+└── README.md
 ```
 
-## 安裝與設置
+## 🚀 Quick Start
 
-### 前置需求
+### Requirements
 
-確保已安裝以下軟體：
-- Python 3.10.9 或更高版本
-- Node.js 21.5.0 或更高版本
-- PostgreSQL 16.6 或更高版本
+- Python 3.10.9+
+- Node.js 21.5.0+
+- PostgreSQL database (Neon recommended)
 
-### 後端設置 (127.0.0.1:8800)
+### 1. Clone the Project
 
-1. **配置環境變數**
-   
-   將 `backend/env.example` 複製為 `backend/.env` 並填入資料庫連線資訊：
+```bash
+git clone <repository-url>
+cd final-project/Bello_system
+```
+
+### 2. Backend Setup
+
+#### Install Dependencies
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+#### Environment Variables Configuration
+
+Copy `backend/.env.example` and rename it to `backend/.env`, then fill in the following configuration:
+
+```env
+# Database connection
+DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
+
+# Server configuration
+SERVER_HOST=127.0.0.1
+SERVER_PORT=8800
+
+# JWT configuration
+JWT_SECRET_KEY=your-secret-key-here
+JWT_EXPIRATION_HOURS=24
+
+# Google OAuth configuration
+GOOGLE_CLIENT_ID=your-google-client-id
+```
+
+#### Initialize Database
+
+1. Log in to [Neon Console](https://console.neon.tech/)
+2. Use SQL Editor to execute the SQL statements in the `backend/init_bello_db.sql` file
+3. Or use psql command:
    ```bash
-   cd backend
-   cp env.example .env
-   ```
-   
-   編輯 `.env` 檔案：
-   ```env
-   DB_NAME=bello
-   DB_USER=postgres
-   DB_PASSWORD=0000
-   DB_HOST=localhost
-   DB_PORT=5432
-   ```
-   
-   > ⚠️ **注意**: 預設資料庫密碼為 `0000`，如需更改請同步修改以下檔案：
-   > - `backend/DB_utils.py` 第 14 行
-   > - `backend/config.py` 第 10 行
-   > - `backend/.env` 檔案
-
-2. **安裝 Python 依賴**
-   ```bash
-   pip install -r requirements.txt
+   psql <your-neon-connection-string> -f backend/init_bello_db.sql
    ```
 
-3. **初始化資料庫**
-   
-   > ⚠️ **重要**: 如果資料庫已存在且包含舊資料，建議先刪除舊資料庫：
-   ```bash
-   psql -U postgres
-   DROP DATABASE bello;
-   \q
-   ```
-   
-   然後執行初始化腳本：
-   ```bash
-   psql -U postgres -f init_bello_db.sql
-   ```
-   
-   > 📝 **說明**: 
-   > - 預設 PostgreSQL port 為 5432
-   > - `init_bello_db.sql` 會創建資料庫並插入 10,000 筆測試用戶資料
-   > - 如需重新初始化，請先刪除舊資料庫
+#### Start Backend Service
 
-4. **啟動後端服務**
-   ```bash
-   python main.py
-   ```
-   
-   後端服務將運行在 `http://127.0.0.1:8800`
+```bash
+cd backend
+python app.py
+```
 
-### 前端設置 (127.0.0.1:5173)
+The backend service will start at `http://127.0.0.1:8800`.
 
-1. **安裝 Node.js 依賴**
-   ```bash
-   cd frontend
-   npm install
-   ```
+### 3. Frontend Setup
 
-2. **啟動開發伺服器**
-   ```bash
-   npm run dev
-   ```
-   
-   前端應用將運行在 `http://127.0.0.1:5173`
+#### Install Dependencies
 
-### 預設端口配置
+```bash
+cd frontend
+npm install
+```
 
-- **前端**: 5173 (已預設在程式碼中)
-- **後端**: 8800 (已預設在 `.env`、`app.py`、`config.py`、`DB_utils.py`、`main.py` 中)
-- **PostgreSQL**: 5432 (已預設在相關配置檔案中)
+#### Environment Variables Configuration (Optional, required for Google Maps functionality)
 
-## 程式架構說明
+Copy `frontend/.env.example` and rename it to `frontend/.env`, then fill in the following configuration:
 
-### 前端 (Vue.js)
+```env
+# Google Maps API Key (for location autocomplete and map display)
+VITE_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+```
 
-1. **Views（頁面元件）**
-   - `LoginView` / `RegisterView`: 用戶認證頁面
-   - `LobbyView`: 大廳頁面
-   - `CreateMeetingView`: 創建聚會頁面
-   - `MeetingListView`: 聚會列表頁面
-   - `MyMeetingsView`: 我的聚會頁面
-   - `ChatView`: 私聊頁面
-   - `MeetingChatView`: 聚會聊天頁面
-   - `ProfileView`: 個人資料頁面
-   - `AdminLobbyView`: 管理員大廳
-   - `AdminMeetingsView`: 管理員聚會管理
-   - `AdminUsersView`: 管理員用戶管理
-   - `AdminUserChatRecordsView`: 用戶聊天記錄查詢
-   - `AdminMeetingChatRecordsView`: 聚會聊天記錄查詢
+> 📍 You need to enable **Maps JavaScript API** and **Places API** in [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 
-2. **Router（路由系統）**
-   - 基於 Vue Router 實現的路由系統
-   - 包含 Navigation Guards，控制頁面訪問權限
-   - 實現前端頁面導航與狀態管理
-   - 支援用戶認證和管理員權限驗證
+#### Start Development Server
 
-3. **Components（元件）**
-   - `MeetingCard`: 聚會卡片元件
-   - `UserMeetingCard`: 用戶聚會卡片元件
+```bash
+npm run dev
+```
 
-### 後端 (Flask)
+The frontend service will start at `http://127.0.0.1:5173`.
 
-1. **Actions（API 端點）**
-   - `auth/`: 用戶認證相關
-     - `login.py`: 用戶登入
-     - `signup.py`: 用戶註冊
-     - `exit.py`: 用戶登出
-   - `meeting/`: 聚會管理功能
-     - `create_meeting.py`: 創建聚會
-     - `list_meeting.py`: 列出所有聚會
-     - `join_meeting.py`: 加入聚會
-     - `leave_meeting.py`: 離開聚會
-     - `cancel_meeting.py`: 取消聚會
-     - `finish_meeting.py`: 結束聚會
-     - `my_meetings.py`: 查詢我的聚會
-   - `profile/`: 個人資料操作
-     - `get_profile.py`: 取得個人資料
-     - `update_profile.py`: 更新個人資料
-     - `sns_management.py`: 社群媒體管理
-   - `admin/`: 管理員功能
-     - `users.py`: 用戶管理
-     - `meetings.py`: 聚會管理
-     - `remove_user.py`: 移除用戶
-     - `cancel_meeting.py`: 取消聚會
-     - `finish_meeting.py`: 結束聚會
-     - `chat_partners.py`: 查詢用戶聊天對象
-     - `chat_history.py`: 查詢聊天記錄
-     - `meeting_chat.py`: 查詢聚會聊天記錄
-   - `chat/`: 即時通訊功能
-     - `private_chat.py`: 私聊功能
-     - `meeting_chat.py`: 聚會聊天功能
-     - `search_user.py`: 搜尋用戶
+### 4. Access the Application
 
-2. **DB_utils**
-   - 封裝與資料庫相關的功能
-   - 包含資料庫連線管理與查詢操作
-   - 提供統一的資料庫存取介面
+Open your browser and visit `http://127.0.0.1:5173`
 
-3. **CORS 配置**
-   - 允許來自 `http://localhost:5173` 的前端請求
-   - 支援 GET、POST、PUT、DELETE、OPTIONS 方法
+## 📦 Deployment
 
-## 測試注意事項
+### Vercel Deployment
 
-### 多用戶測試
+This project is configured for Vercel deployment with automatic deployment support:
 
-⚠️ **重要**: 在測試多用戶聊天情境時，**不能在同一個瀏覽器開兩個分頁登入不同帳號**，這會導致 session 衝突。
+1. Push the project to GitHub
+2. Import the project in Vercel
+3. Set environment variables (same as `.env`)
+4. Vercel will automatically build and deploy
 
-**建議做法**:
-- 使用兩個不同的瀏覽器（例如：Safari 和 Chrome）
-- 或使用多個無痕視窗登入不同帳號
-- 統一在 `http://127.0.0.1:5173` 登入
+For detailed configuration, please refer to `vercel.json`.
 
-### 理想 Demo 情境
+### Environment Variables Setup
 
-建議同時開啟三個視窗進行測試：
-- 2 個用戶視窗（不同瀏覽器或無痕視窗）
-- 1 個管理員視窗
+Add the following environment variables in Vercel project settings:
 
-## 常見問題 (FAQ)
+- `DATABASE_URL`
+- `JWT_SECRET_KEY`
+- `JWT_EXPIRATION_HOURS`
+- `GOOGLE_CLIENT_ID`
+- `VITE_GOOGLE_MAPS_API_KEY` (for frontend, used for location features)
 
-### Q: 資料庫連線失敗怎麼辦？
-A: 請確認：
-1. PostgreSQL 服務是否正在運行
-2. `.env` 檔案中的資料庫連線資訊是否正確
-3. 資料庫密碼是否在所有相關檔案中一致
+## 🏗️ System Architecture
 
-### Q: 如何重新初始化資料庫？
-A: 
-1. 先刪除舊資料庫：`DROP DATABASE bello;`
-2. 重新執行初始化腳本：`psql -U postgres -f init_bello_db.sql`
+### Frontend Architecture
 
-### Q: 前端無法連接到後端 API？
-A: 請確認：
-1. 後端服務是否運行在 `http://127.0.0.1:8800`
-2. 前端是否運行在 `http://127.0.0.1:5173`
-3. CORS 配置是否正確
+- **Component-based Design**: Uses Vue 3 Composition API
+- **Route Management**: Vue Router implements SPA routing with permission guards
+- **State Management**: Uses localStorage to store authentication state
+- **API Encapsulation**: Unified API request handling with automatic JWT Token addition
 
-### Q: 如何更改預設端口？
-A: 
-- 前端端口：修改 `vite.config.js`
-- 後端端口：修改 `main.py` 和相關配置檔案
-- 資料庫端口：修改 `.env` 和相關配置檔案
+### Backend Architecture
 
-## 開發說明
+- **RESTful API**: Follows REST design principles
+- **Modular Design**: Uses Flask Blueprint to organize routes
+- **Authentication Mechanism**: JWT Token authentication with decorator-protected endpoints
+- **Database Abstraction**: `DB_utils.py` encapsulates all database operations
 
-- 本專案採用前後端分離架構，前後端可獨立開發和部署
-- 前端使用 Vue 3 Composition API
-- 後端使用 Flask Blueprint 組織路由
-- 資料庫使用 PostgreSQL，支援複雜查詢和事務處理
+### Database Design
 
-## 授權
+- **Normalization**: Complies with 4NF normalization
+- **Main Tables**:
+  - `USER`: User basic information
+  - `USER_DETAIL`: User detailed information
+  - `MEETING`: Meetup information
+  - `PARTICIPATION`: Participation records
+  - `FRIENDSHIP`: Friend relationships
+  - `PRIVATE_MESSAGE`: Private messages
+  - `CHATTING_ROOM`: Meetup chat records
 
-本專案為資料庫管理課程期末專案。
+## 🔑 Key Features
+
+### Authentication System
+
+- **JWT Token**: Issues JWT Token upon login, valid for 24 hours
+- **Route Protection**: Unauthenticated users accessing protected routes are automatically redirected to the login page
+- **Google OAuth**: Supports Google account login (embedded browsers will show prompts)
+
+### Friend System
+
+- **Friend Requests**: Send, accept, and reject friend requests
+- **Friend List**: View all friends and their online status
+- **User Search**: Search users and send friend requests
+- **Profile Viewing**: View other users' public profiles
+
+### Chat System
+
+- **Private Chat**: One-on-one real-time chat
+- **Meetup Chat**: Group chat rooms with support for viewing all participants
+- **Online Status**: Real-time display of user online/offline status
+  - Heartbeat mechanism: Frontend sends status updates every 30 seconds
+  - Logic: Active within 60 seconds is considered online
+- **Message History**: Saves and displays chat records
+
+### Meetup System
+
+- **Meetup Types**: Lunch, coffee/afternoon tea, dinner, drinks, language exchange
+- **Language Filtering**: Supports multiple language tags
+- **Participation Management**: Join, leave, cancel meetups
+- **Status Management**: Ongoing, finished, cancelled
+
+## 🧪 Development
+
+### Frontend Development
+
+```bash
+cd frontend
+npm run dev      # Start development server
+npm run build    # Build production version
+npm run lint     # Code linting
+```
+
+### Backend Development
+
+```bash
+cd backend
+python app.py    # Start Flask development server
+```
+
+### Database Operations
+
+All database operations are performed through the `DatabaseManager` class in `DB_utils.py`, ensuring consistent connection management and error handling.
+
+## 📝 API Endpoints
+
+### Authentication
+- `POST /login` - User login
+- `POST /signup` - User registration
+- `POST /auth/google` - Google OAuth login
+- `GET /auth/google/client-id` - Get Google Client ID
+
+### Meetups
+- `GET /meetings` - Get meetup list
+- `POST /create-meeting` - Create meetup
+- `POST /join-meeting` - Join meetup
+- `POST /leave-meeting` - Leave meetup
+- `GET /my-meetings/:user_id` - Get my meetups
+
+### Chat
+- `GET /my-chats` - Get chat list
+- `GET /private-chat/history` - Get private chat history
+- `POST /private-chat/send` - Send private message
+- `GET /meeting-chat/:meeting_id` - Get meetup chat history
+- `POST /meeting-chat/send` - Send meetup message
+
+### Friends
+- `GET /friends` - Get friend list
+- `POST /friends/add` - Send friend request
+- `POST /friends/accept` - Accept friend request
+- `POST /friends/reject` - Reject friend request
+- `GET /friends/status/:user_id` - Check friendship status
+
+### Profile
+- `GET /user-profile/:user_id` - Get user profile
+- `GET /friends/user-profile/:user_id` - Get other user's public profile
+- `POST /update-profile` - Update profile
+- `POST /update-avatar` - Update avatar
+
+### Admin
+- `GET /admin/users` - Get all user list (supports pagination and search)
+- `GET /admin/users/:user_id` - Get user detailed information
+- `POST /admin/users/:user_id/remove` - Remove user
+- `GET /admin/meetings` - Get all meetup list
+- `GET /admin/all-private-chats` - Get all private chat conversation lists
+- `POST /admin/chat-history` - Get chat history between two specified users
+- `GET /admin/all-meeting-chats` - Get all meetup chat lists with chat records
+- `GET /admin/meeting-chat/:meeting_id` - Get specified meetup's chat history
+
+All endpoints requiring authentication need to include `Authorization: Bearer <token>` in the request header.
+
+## 🔒 Security Features
+
+- **JWT Authentication**: All API requests require a valid JWT Token
+- **Role Permissions**: Admin features require `Admin` role
+- **CORS Configuration**: Properly configured cross-origin requests
+- **Input Validation**: Backend validates all input parameters
+- **SQL Injection Protection**: Uses parameterized queries
+
+## 📄 License
+
+This project is a final project work.
+
+## 👥 Contributing
+
+This project is for educational purposes. Suggestions and improvements are welcome.
+
+---
+
+**Developers**: Final Project Team  
+**Last Updated**: January 2025
